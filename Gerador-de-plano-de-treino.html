@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Plano de Treino Simples</title>
+
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+    .box { background: white; padding: 20px; border-radius: 8px; width: 350px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+    button { margin-top: 10px; padding: 10px; width: 100%; cursor: pointer; border: none; border-radius: 6px; background: #1976d2; color: white; }
+    label { font-weight: bold; }
+    #resultado { margin-top: 20px; white-space: pre-line; background: #fafafa; padding: 10px; border-radius: 6px; min-height: 60px; }
+    input[type="number"] { width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; }
+    select { width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; }
+</style>
+
+</head>
+<body>
+
+<div class="box">
+    <h2>Gerador de Plano de Treino</h2>
+
+    <label for="objetivo">Objetivo:</label><br>
+    <select id="objetivo">
+        <option value="hipertrofia">Hipertrofia</option>
+        <option value="emagrecimento">Emagrecimento</option>
+        <option value="resistencia">Resistência</option>
+    </select><br><br>
+
+    <label for="nivel">Nível:</label><br>
+    <select id="nivel">
+        <option value="iniciante">Iniciante</option>
+        <option value="intermediario">Intermediário</option>
+        <option value="avancado">Avançado</option>
+    </select><br><br>
+
+    <label for="dias">Dias por semana:</label><br>
+    <input id="dias" type="number" min="1" max="6" value="3"><br><br>
+
+    <button onclick="gerar()">Gerar Plano</button>
+
+    <div id="resultado"></div>
+</div>
+
+<script>
+function gerar() {
+    const objetivo = document.getElementById("objetivo").value;
+    const nivel = document.getElementById("nivel").value;
+    const diasInput = document.getElementById("dias").value;
+    const dias = Math.max(1, Math.min(6, parseInt(diasInput, 10) || 1)); // garante 1-6
+
+    // Exercícios básicos
+    const exercicios = {
+        hipertrofia: ["Supino", "Agachamento", "Remada", "Desenvolvimento", "Rosca direta"],
+        emagrecimento: ["Caminhada rápida", "Agachamento livre", "Prancha", "Polichinelo"],
+        resistencia: ["Corrida leve", "Flexões", "Prancha", "Agachamento"]
+    };
+
+    const lista = exercicios[objetivo] || [];
+
+    let texto = "=== Seu Plano de Treino ===\n\n";
+    texto += `Objetivo: ${capitalize(objetivo)}\nNível: ${capitalize(nivel)}\nDias/semana: ${dias}\n\n`;
+
+    for (let i = 1; i <= dias; i++) {
+        texto += `Dia ${i}:\n`;
+        lista.forEach(ex => {
+            texto += ` - ${ex}`;
+            // Sugestão simples de séries/repetições dependendo do objetivo/nível
+            if (objetivo === "hipertrofia") {
+                if (nivel === "iniciante") texto += " — 3x8-10\n";
+                else if (nivel === "intermediario") texto += " — 4x8-12\n";
+                else texto += " — 5x6-12\n";
+            } else if (objetivo === "emagrecimento") {
+                if (nivel === "iniciante") texto += " — 20-30 min contínuos / 3 séries\n";
+                else if (nivel === "intermediario") texto += " — 30-40 min / 3-4 séries\n";
+                else texto += " — 40-50 min / 4 séries\n";
+            } else { // resistencia
+                if (nivel === "iniciante") texto += " — 15-20 min / 3 séries\n";
+                else if (nivel === "intermediario") texto += " — 20-30 min / 3-4 séries\n";
+                else texto += " — 30-45 min / 4 séries\n";
+            }
+        });
+        texto += "\n";
+    }
+
+    document.getElementById("resultado").innerText = texto;
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+</script>
+
+</body>
+</html>
